@@ -1,5 +1,6 @@
 (channel
  (version 0)
  (dependencies
+ (channel
   (name unelo-proteomics)
-  (url "git@gitlab.utu.fi:elixirdianf/unelo-proteomics.git")))
+  (url "git@gitlab.utu.fi:elixirdianf/unelo-proteomics.git"))))
