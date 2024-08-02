@@ -1,14 +1,3 @@
-(define-module (unelo-proteomics-nonfree packages diatracer)
-  #:use-module (guix packages)
-  #:use-module (unelo-proteomics-nonfree packages diapysef)
-  #:use-module (guix build-system trivial)
-  #:use-module (guix download)
-  #:use-module (gnu packages java)
-  #:use-module (gnu packages bash)
-  #:use-module (guix gexp)
-  #:use-module ((guix licenses)
-                #:prefix license:))
-
 ;; Copyright (C) 2024
 
 ;; This program is free software: you can redistribute it and/or modify
@@ -24,6 +13,51 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+(define-module (unelo-proteomics-nonfree packages diatracer)
+  #:use-module (guix packages)
+  #:use-module (unelo-proteomics-nonfree packages diapysef)
+  #:use-module (guix build-system trivial)
+  #:use-module (guix download)
+  #:use-module (gnu packages java)
+  #:use-module (gnu packages bash)
+  #:use-module (guix gexp)
+  #:use-module ((guix licenses)
+                #:prefix license:)
+  #:use-module (ice-9 match)
+  #:use-module (guix derivations)
+  #:use-module (guix packages)
+  #:use-module (guix store)
+  #:use-module (guix monads)
+  #:use-module (guix gexp)
+  #:use-module (srfi srfi-1)
+  #:use-module (srfi srfi-26)
+  )
+
+(define* (just-error-if-not-in-store #:key recursive?)
+  (lambda*  
+      (ref hash-algo hash
+	   #:optional name
+	   #:key (system (%current-system))
+	   (guile (default-guile)))
+
+    (mlet %store-monad ((guile (package->derivation (or guile (default-guile)) system)))
+      (gexp->derivation
+       (or name "just-error")
+       #~(begin
+	   (error (string-append "source of package " #$output   "is not downloadable\n")
+		  "please manually dowload it, and call 'guix download' on the file."))
+       #:script-name "fail"
+       #:system system
+       #:local-build? #t ;don't offload repo cloning
+       #:hash-algo hash-algo
+       #:hash hash
+       #:recursive? recursive?
+       #:env-vars '()
+       #:leaked-env-vars '()
+
+       #:guile-for-build guile))))
+
+
 
 (define license (@@ (guix licenses) license))
 (define* (undistributable uri #:optional (comment ""))
@@ -36,31 +70,20 @@ at URI, which may be a file:// URI pointing the package's tree."
             "in prebuilt form.  Check the URI for details.  "
             comment)))
 
-(define (url-fetch-with-warning .  args)
-  (display "
-YOU NEED TO MANUALLY DOWNLOAD THE 'SOURCE'!
-SEE THIS PACKAGES DESCRIPTION FOR MORE INFO.
-")
-  (apply url-fetch args))
   
 
 (define-public diatracer
   (package
     (name "diatracer")
-    (home-page "https://github.com/Nesvilab/")
+    (home-page "https://github.com/Nesvilab")
     (version "1.1.3")
     (source
      (origin
-	(method url-fetch-with-warning)
-	(uri (or
-	      ;;  you need to manually add the file to the store with "guix download diaTracer-1.1.3.jar" in the directory where you downloaded the jar file from the nesvilab.
-
-	      "DOWNLOADTHISYOURSELF:a/diaTracer-1.1.3.jar"
-	      ;; guix seems to handle "file://" specially wrt 'guix download',
-	      ;; it will still complain that it cannot be found, even if you put it in the store with 'guix download'
-	      (string-append "file://" (dirname (current-filename)) "/" "diaTracer-1.1.3.jar")))
-	(sha256 (base32
-		 "05ydhvvm9sjfl4wrqr3pmf3fjg46blwjvlv7lg26npysk2yiq3qg"
+       (method (just-error-if-not-in-store))
+       (file-name "diaTracer-1.1.3.jar")
+       (uri     "diaTracer-1.1.3.jar")
+       (sha256 (base32
+		"05ydhvvm9sjfl4wrqr3pmf3fjg46blwjvlv7lg26npysk2yiq3qg"
 		 ))))
     (build-system trivial-build-system)
     (description (string-append "Please manually download " name "-" version " from" home-page " and run 'guix download' on it, for this package to be able to build."))
