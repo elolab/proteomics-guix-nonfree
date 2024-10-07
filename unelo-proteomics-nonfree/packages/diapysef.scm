@@ -75,6 +75,9 @@ combined work."))
        glibc))
     (arguments
      (list
+      #:substitutable? #f
+      ;; because this .so file cannot be redistributed with GPL programs
+      ;; we don't want any server to share this.
       #:install-plan
       ''(("./timsdata/cpp/" "lib/" #:include-regexp (".so$")))
       #:phases
