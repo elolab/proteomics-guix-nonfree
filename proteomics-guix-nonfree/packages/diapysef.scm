@@ -15,8 +15,8 @@
 
 ;; look at (nvidia-driver)
 
-(define-module (unelo-proteomics-nonfree packages diapysef)
-  #:use-module (unelo-proteomics packages openms)
+(define-module (proteomics-guix-nonfree packages diapysef)
+  #:use-module (proteomics-guix packages openms)
   #:use-module (guix packages)
   #:use-module (guix git-download)
   #:use-module (guix download)

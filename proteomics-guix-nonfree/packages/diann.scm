@@ -14,8 +14,8 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-(define-module (unelo-proteomics-nonfree packages diann)
-  #:use-module (unelo-proteomics-nonfree packages diapysef)
+(define-module (proteomics-guix-nonfree packages diann)
+  #:use-module (proteomics-guix-nonfree packages diapysef)
   #:use-module (guix packages)
   #:use-module (guix git-download)
   #:use-module (gnu packages machine-learning)

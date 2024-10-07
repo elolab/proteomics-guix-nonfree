@@ -13,9 +13,9 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-(define-module (unelo-proteomics-nonfree packages diatracer)
+(define-module (proteomics-guix-nonfree packages diatracer)
   #:use-module (guix packages)
-  #:use-module (unelo-proteomics-nonfree packages diapysef)
+  #:use-module (proteomics-guix-nonfree packages diapysef)
   #:use-module (guix build-system trivial)
   #:use-module (guix download)
   #:use-module (gnu packages java)

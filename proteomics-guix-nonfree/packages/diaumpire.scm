@@ -1,4 +1,4 @@
-(define-module (unelo-proteomics-nonfree packages diaumpire)
+(define-module (proteomics-guix-nonfree packages diaumpire)
   #:use-module (guix packages)
   #:use-module (guix build-system trivial)
   #:use-module (guix download)
